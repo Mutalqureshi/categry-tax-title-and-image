@@ -1,0 +1,25 @@
+add_shortcode('cateandsubcate', 'cateandsubcate');
+function cateandsubcate($atts)
+{
+	$child_of = ( isset($atts['child_of']) && is_numeric($atts['child_of'])   ?  $atts['child_of']  : 10);
+	$args = array('child_of' => $child_of);
+	$categories = get_categories( $args );
+	$cate = '';
+	
+	foreach($categories as $category) {
+		$cate .= '<div class="et_pb_text et_clickable"><div class="et_pb_text_inner">';
+		
+		$thumbnail_id  = get_term_meta($category->term_id);
+		$image_id = $thumbnail_id[cvp_term_thumbnail][0];
+		$url = wp_get_attachment_image_src($image_id);
+		
+		$cate .='<img class="img-fluid" src="'.$url[0]. ' " alt="'.$image_alt.'">';
+		
+		$cate .= '<h3><a href="' . get_category_link( $category->term_id ) . '" title="' . sprintf( __( "View all posts in %s" ), $category->name ) . '" ' . '>' . $category->name.'</a> </h3></div></div>';
+		
+	}
+	return $cate;
+}
+
+
+[cateandsubcate child_of="33"]
